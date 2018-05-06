@@ -12,3 +12,19 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.active {
+  color: green;
+  text-decoration: none;
+  font-weight: bold;
+}
+.error {
+  color: red;
+  font-size: .8em;
+}
