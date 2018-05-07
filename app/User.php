@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role',
+        'name', 'email', 'password',
     ];
 
     /**
@@ -27,13 +27,31 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role')->withTimestamps();
+    }
+
+    /**
+     * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
+     * @param array $roles
+     * @return mixed
+     */
     public function hasRole(array $roles)
     {
-        foreach ($roles as $role) {
-            if ($this->role === $role) {
-                return true;
-            }
-        }
-        return false;
+        return $this->roles->pluck('name')->intersect($roles)->count();
+    }
+
+    /**
+     * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->hasRole(['admin']);
     }
 }

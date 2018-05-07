@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,8 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'user.role:admin']);
+        $this->middleware('auth', ['except' => ['show']]);
+        $this->middleware('user.role:admin', ['except' => ['edit', 'update', 'show']]);
     }
 
     /**
@@ -47,47 +49,52 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
+     * @param User $user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        return view('users.show', compact('user'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
+     * @param User $user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        $this->authorize($user);
+        return view('users.edit', compact('user'));
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
+     * @param UserRequest $request
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, User $user)
     {
-        //
+        $this->authorize($user);
+        $user->update($request->all());
+        return back()->with('info', 'Los datos se actualizaron satisfactoriamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $this->authorize('destroy', $user);
+        $user->delete();
+        return redirect()->route('users.index');
     }
 }

@@ -18,14 +18,14 @@
                 <td>{{ $user->id }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
-                <td>{!! $user->role ?: '<span class="badge badge-secondary">no tiene</span>' !!}</td>
+                <td>{!! $user->roles->pluck('display_name')->implode(', ') ?: '<span class="badge badge-secondary">no tiene</span>' !!}</td>
                 <td>
-{{--                    <a class="btn btn-info btn-sm" href="{{ route('users.edit', $user->id) }}">Editar</a>--}}
-                    {{--<form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline;">--}}
-                        {{--@method('DELETE')--}}
-                        {{--@csrf--}}
-                        {{--<input type="submit" class="btn btn-danger btn-sm" value="Eliminar">--}}
-                    {{--</form>--}}
+                    <a class="btn btn-info btn-sm" href="{{ route('users.edit', $user->id) }}">Editar</a>
+                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline;">
+                        @method('DELETE')
+                        @csrf
+                        <input type="submit" class="btn btn-danger btn-sm" value="Eliminar">
+                    </form>
                 </td>
             </tr>
         @endforeach

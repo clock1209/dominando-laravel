@@ -15,12 +15,6 @@
         } ?>
 
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            {{--<a class="navbar-brand" href="#">Navbar</a>--}}
-            {{--<button class="navbar-toggler" type="button" data-toggle="collapse"--}}
-                    {{--data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"--}}
-                    {{--aria-expanded="false" aria-label="Toggle navigation">--}}
-                {{--<span class="navbar-toggler-icon"></span>--}}
-            {{--</button>--}}
 
             <div class="container">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -58,6 +52,7 @@
                                     {{ auth()->user()->name }}
                                 </a>
                                 <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ route('users.edit', auth()->user()->id) }}">Mi cuenta</a>
                                     <a class="dropdown-item" href="/logout">Cerrar sesión</a>
                                 </div>
                             </li>
