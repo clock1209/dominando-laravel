@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateMessageRequest;
 use App\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class MessageController extends Controller
 {
@@ -23,7 +24,7 @@ class MessageController extends Controller
      */
     public function index()
     {
-        $messages = Message::all();
+        $messages = Message::with(['user', 'note', 'tags'])->get();
         return view('messages.index', compact('messages'));
     }
 
@@ -49,6 +50,10 @@ class MessageController extends Controller
         if (auth()->check()) {
             auth()->user()->messages()->save($message);
         }
+
+        Mail::send('emails.contact', ['msg' => $message], function($m) use($message) {
+            $m->to($message->email, $message->nombre)->subject('Tu mensaje fue recibido');
+        });
 
         return redirect()->route('messages.create')->with('info', 'Recibimos tu mensjae.');
     }

@@ -7,7 +7,10 @@
     @else
         <form method="POST" action="{{ route('messages.update', $message->id) }}">
             @method('PUT')
-            @includeIf('messages.partials.form', ['btnTxt' => 'Actualizar'])
+            @includeIf('messages.partials.form', [
+                'btnTxt' => 'Actualizar',
+                'showFields' => !$message->user_id,
+            ])
         </form>
     @endif
 @stop

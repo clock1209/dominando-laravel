@@ -1,5 +1,9 @@
 <?php
 
+//DB::listen(function ($query) {
+//    echo "<pre>{$query->sql}</pre>";
+//});
+
 Route::get('/', 'PageController@home')->name('home');
 
 Route::get('saludos/{nombre?}', 'PageController@saludos')->name('saludos');
