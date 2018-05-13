@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -28,13 +29,13 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
-        //
+        $roles = Role::pluck('display_name', 'id');
+        return view('users.create', compact('roles'));
     }
 
     /**
@@ -43,9 +44,11 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        $user = User::create($request->all());
+        $user->roles()->attach($request->roles);
+        return redirect()->route('users.index');
     }
 
     /**
@@ -66,8 +69,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $this->authorize($user);
-        return view('users.edit', compact('user'));
+        $this->authorize('edit', $user);
+        $roles = Role::pluck('display_name', 'id');
+        return view('users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -79,8 +83,9 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        $this->authorize($user);
-        $user->update($request->all());
+        $this->authorize('update', $user);
+        $user->update($request->except(['password']));
+        $user->roles()->sync($request->roles);
         return back()->with('info', 'Los datos se actualizaron satisfactoriamente.');
     }
 

@@ -44,7 +44,12 @@ class MessageController extends Controller
      */
     public function store(CreateMessageRequest $request)
     {
-        Message::create($request->all());
+        $message = Message::create($request->all());
+
+        if (auth()->check()) {
+            auth()->user()->messages()->save($message);
+        }
+
         return redirect()->route('messages.create')->with('info', 'Recibimos tu mensjae.');
     }
 

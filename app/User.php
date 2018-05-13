@@ -36,6 +36,31 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Role')->withTimestamps();
     }
 
+    public function messages()
+    {
+        return $this->hasMany('App\Message');
+    }
+
+    public function note()
+    {
+        return $this->morphOne('App\Note', 'parent');
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany('App\Tag', 'parent', 'taggables')->withTimestamps();
+    }
+
+    public function setPasswordAttribute($password)
+    {
+        return $this->attributes['password'] = bcrypt($password);
+    }
+
+    public function implodeTags()
+    {
+        return $this->tags->pluck('name')->implode(', ');
+    }
+
     /**
      * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
      * @param array $roles

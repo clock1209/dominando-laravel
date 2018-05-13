@@ -16,12 +16,13 @@ class UsersTableSeeder extends Seeder
         $admin = User::create([
             'name' => 'admin',
             'email' => 'admin@admin.com',
-            'password' => bcrypt('secret'),
+            'password' => 'secret',
         ]);
         $admin->roles()->attach([1, 2, 3]);
 
         factory(\App\User::class, 10)->create()->map(function ($user) {
             $user->roles()->attach(rand(2, 3));
+            $user->tags()->attach(rand(1, 5));
         });
     }
 }

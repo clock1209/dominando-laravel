@@ -8,5 +8,6 @@ $factory->define(\App\Message::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'phone' => $faker->optional()->regexify('33[0-9]{8}'),
         'mensaje' => $faker->paragraph(rand(2, 5)),
+        'user_id' => $faker->optional()->randomElement(\App\User::pluck('id')->toArray())
     ];
 });
