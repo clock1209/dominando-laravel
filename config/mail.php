@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'curso@dominandolaravel.com'),
-        'name' => env('MAIL_FROM_NAME', 'Explicito'),
+        'address' => env('MAIL_FROM_ADDRESS', 'no-reply@dominandolaravel.com'),
+        'name' => env('MAIL_FROM_NAME', 'Página'),
     ],
 
     /*
