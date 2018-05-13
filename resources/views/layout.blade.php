@@ -23,9 +23,6 @@
                         <li class="nav-item {{ activeMenu('/') }}">
                             <a class="nav-link" href="{{ route('home') }}">Home</a>
                         </li>
-                        <li class="nav-item {{ activeMenu('saludos/*') }}">
-                            <a class="nav-link" href="{{ route('saludos', ['Chuntaro']) }}">Saludos</a>
-                        </li>
                         <li class="nav-item {{ activeMenu('messages/create') }}">
                             <a class="nav-link" href="{{ route('messages.create') }}">Contactos</a>
                         </li>

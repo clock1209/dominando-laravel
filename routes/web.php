@@ -6,8 +6,6 @@
 
 Route::get('/', 'PageController@home')->name('home');
 
-Route::get('saludos/{nombre?}', 'PageController@saludos')->name('saludos');
-
 Route::resource('messages', 'MessageController');
 Route::resource('users', 'UserController');
 
