@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageReceived;
-use App\Http\Requests\CreateMessageRequest;
 use App\Message;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Events\MessageReceived;
+use App\Repositories\MessagesInterface;
+use App\Http\Requests\CreateMessageRequest;
 
 class MessageController extends Controller
 {
+    protected $messages;
+
     /**
      * MessageController constructor.
+     * @param MessagesInterface $messages
      */
-    public function __construct()
+    public function __construct(MessagesInterface $messages)
     {
+        $this->messages = $messages;
         $this->middleware('auth', ['except' => ['create', 'store']]);
     }
 
@@ -25,7 +28,7 @@ class MessageController extends Controller
      */
     public function index()
     {
-        $messages = Message::with(['user', 'note', 'tags'])->orderBy('created_at', request('sorted', 'desc'))->paginate(15);
+        $messages = $this->messages->getPaginated();
         return view('messages.index', compact('messages'));
     }
 
@@ -46,35 +49,31 @@ class MessageController extends Controller
      */
     public function store(CreateMessageRequest $request)
     {
-        $message = Message::create($request->all());
-
-        if (auth()->check()) {
-            auth()->user()->messages()->save($message);
-        }
-
+        $message = $this->messages->store($request);
         event(new MessageReceived($message));
-
 
         return redirect()->route('messages.create')->with('info', 'Recibimos tu mensjae.');
     }
 
     /**
      * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
-     * @param Message $message
+     * @param Integer $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show(Message $message)
+    public function show($id)
     {
+        $message = $this->messages->findById($id);
         return view('messages.show', compact('message'));
     }
 
     /**
      * @author Octavio Cornejo <octavio.cornejo@nuvemtecnologia.mx>
-     * @param Message $message
+     * @param Integer $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Message $message)
+    public function edit($id)
     {
+        $message = $this->messages->findById($id);
         return view('messages.edit', compact('message'));
     }
 
@@ -86,7 +85,8 @@ class MessageController extends Controller
      */
     public function update(CreateMessageRequest $request, Message $message)
     {
-        $message->update($request->all());
+        $message = $this->messages->update($request, $message);
+
         return redirect()->route('messages.index');
     }
 
@@ -98,7 +98,8 @@ class MessageController extends Controller
      */
     public function destroy(Message $message)
     {
-        $message->delete();
+        $this->messages->destroy($message);
+
         return redirect()->route('messages.index');
     }
 }

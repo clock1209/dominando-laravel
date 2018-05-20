@@ -32,4 +32,9 @@ class Message extends Model
     {
         return $this->tags->pluck('name')->implode(', ');
     }
+
+    public function scopeTest($query)
+    {
+        return $query->has('user');
+    }
 }
