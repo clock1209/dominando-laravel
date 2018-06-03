@@ -19,11 +19,11 @@
         @foreach($users as $user)
             <tr>
                 <td>{{ $user->id }}</td>
-                <td>{{ $user->name }}</td>
+                <td>{{ $user->present()->link() }}</td>
                 <td>{{ $user->email }}</td>
-                <td>{!! $user->roles->pluck('display_name')->implode(', ') ?: '<span class="badge badge-secondary">no tiene</span>' !!}</td>
-                <td>{!! $user->note->body or '<span class="badge badge-secondary">no tiene</span>' !!}</td>
-                <td>{!! !$user->tags->isEmpty() ? $user->implodeTags() : '<span class="badge badge-secondary">no tiene</span>' !!}</td>
+                <td>{{ $user->present()->roles() }}</td>
+                <td>{{ $user->present()->notes() }}</td>
+                <td>{{ $user->present()->tags() }}</td>
                 <td>
                     <a class="btn btn-info btn-sm" href="{{ route('users.edit', $user->id) }}">Editar</a>
                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline;">

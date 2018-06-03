@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Presenters\MessagePresenter;
 use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
@@ -36,5 +37,10 @@ class Message extends Model
     public function scopeTest($query)
     {
         return $query->has('user');
+    }
+
+    public function present()
+    {
+        return new MessagePresenter($this);
     }
 }
