@@ -32,7 +32,7 @@ class CacheMessages implements MessagesInterface
      */
     public function store($request)
     {
-        $message = $this->store($request);
+        $message = $this->messages->store($request);
 
         Cache::tags('messages')->flush();
         return $message;

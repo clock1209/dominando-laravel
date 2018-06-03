@@ -4,10 +4,9 @@ namespace App\Listeners;
 
 use App\Events\MessageReceived;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendEmailMessageReceived
+class SendEmailMessageReceived implements ShouldQueue
 {
     /**
      * Handle the event.
@@ -18,9 +17,10 @@ class SendEmailMessageReceived
     public function handle(MessageReceived $event)
     {
         $message = $event->message;
-        if (auth()->check()) {
-            $message->email = auth()->user()->email;
-            $message->nombre = auth()->user()->name;
+        $auth = $event->auth;
+        if ($message->user_id) {
+            $message->email = $auth->email;
+            $message->nombre = $auth->name;
         }
         Mail::send('emails.contact', ['msg' => $message], function($m) use($message) {
             $m->to($message->email, $message->nombre)->subject('Tu mensaje fue recibido');

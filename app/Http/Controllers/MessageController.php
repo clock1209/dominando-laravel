@@ -50,7 +50,7 @@ class MessageController extends Controller
     public function store(CreateMessageRequest $request)
     {
         $message = $this->messages->store($request);
-        event(new MessageReceived($message));
+        event(new MessageReceived($message, auth()->user()));
 
         return redirect()->route('messages.create')->with('info', 'Recibimos tu mensjae.');
     }

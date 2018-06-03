@@ -15,15 +15,17 @@ class MessageReceived
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message = null;
+    public $auth = null;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $auth)
     {
         $this->message = $message;
+        $this->auth = $auth;
     }
 
     /**
